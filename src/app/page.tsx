@@ -1,7 +1,7 @@
 "use client"
 import Editor from "@/components/Editor";
 import TerminalController from "@/components/Terminal";
-import Image from "next/image";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Home() {
   return (
