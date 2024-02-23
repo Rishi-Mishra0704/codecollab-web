@@ -93,26 +93,19 @@ const supportedThemes: Theme[] = [
   { value: 'xcode', label: 'Xcode' },
 ];
 const CodeEditor: React.FC = () => {
-  const [language, setLanguage] = useState<string>("javascript");
-  const [theme, setTheme] = useState<string>("monokai");
-  const [code, setCode] = useState<string>("");
-
-  const selectedLanguageLabel =
-    supportedLanguages.find((lang) => lang.value === language)?.label ||
-    "Select Language";
-  const selectedThemeLabel =
-    supportedThemes.find((t) => t.value === theme)?.label || "Select Theme";
-
+  const [language, setLanguage] = useState<string>('javascript');
+  const [theme, setTheme] = useState<string>('monokai');
+  const [code, setCode] = useState<string>('');
   // Declare WebSocket instance using useRef hook
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     // Connect to WebSocket server
-    ws.current = new WebSocket("ws://localhost:8000/ws");
+    ws.current = new WebSocket('ws://localhost:8000/ws');
 
     // Set up event listeners
     ws.current.onopen = () => {
-      console.log("Connected to WebSocket server");
+      console.log('Connected to WebSocket server');
     };
 
     ws.current.onmessage = (event) => {
@@ -122,7 +115,7 @@ const CodeEditor: React.FC = () => {
     };
 
     ws.current.onclose = () => {
-      console.log("Disconnected from WebSocket server");
+      console.log('Disconnected from WebSocket server');
     };
 
     // Clean up WebSocket connection
@@ -133,25 +126,19 @@ const CodeEditor: React.FC = () => {
     };
   }, []);
 
+  const selectedLanguageLabel = supportedLanguages.find(lang => lang.value === language)?.label || 'Select Language';
+  const selectedThemeLabel = supportedThemes.find(t => t.value === theme)?.label || 'Select Theme';
+
   const handleCodeChange = (newCode: string) => {
     // Send code changes to WebSocket server
     if (ws.current && ws.current.readyState === WebSocket.OPEN) {
       const message = {
-        username: "user123", // Set username as needed
+        username: 'user123', // Set username as needed
         content: newCode,
       };
       ws.current.send(JSON.stringify(message));
     }
   };
-
-  const handleLanguageChange = (lang: string) => {
-    setLanguage(lang);
-  };
-
-  const handleThemeChange = (th: string) => {
-    setTheme(th);
-  };
-
   return (
     <Container fluid>
       <Row className="mt-3">
