@@ -104,9 +104,7 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    // Set the initial code content
-    fileContent = code
-    setCode(fileContent);
+    setCode(code);  
 
     // Connect to WebSocket server
     ws.current = new WebSocket("ws://localhost:8000/ws");
@@ -118,9 +116,9 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
 
     ws.current.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      // Handle received message, e.g., update Ace Editor content
+      // Update local state with new code received from the server
       setCode(message.content);
-    };
+    };    
 
     ws.current.onclose = () => {
       console.log("Disconnected from WebSocket server");
@@ -208,7 +206,7 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
             width="100%"
             showGutter={true}
             fontSize={16}
-            value={fileContent}
+            value={code !== "" ? code : fileContent}
             onChange={handleCodeChange}
           />
         </Col>
