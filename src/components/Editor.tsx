@@ -105,7 +105,8 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
 
   useEffect(() => {
     // Set the initial code content
-    setCode(fileContent);
+    fileContent = code
+    setCode(code);
 
     // Connect to WebSocket server
     ws.current = new WebSocket("ws://localhost:8000/ws");
@@ -208,6 +209,7 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
             showGutter={true}
             fontSize={16}
             value={fileContent}
+            onChange={handleCodeChange}
           />
         </Col>
       </Row>
