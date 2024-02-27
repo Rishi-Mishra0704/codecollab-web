@@ -39,7 +39,6 @@ import "ace-builds/src-noconflict/theme-tomorrow_night_eighties";
 import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/theme-vibrant_ink";
 import "ace-builds/src-noconflict/theme-xcode";
-import LanguageTheme from "./LanguageTheme";
 
 interface EditorProps {
   fileContent: string;
@@ -160,14 +159,42 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
 
   return (
     <Container fluid>
-      <LanguageTheme
-        supportedLanguages={supportedLanguages}
-        supportedThemes={supportedThemes}
-        handleLanguageChange={handleLanguageChange}
-        handleThemeChange={handleThemeChange}
-        selectedThemeLabel={selectedThemeLabel}
-        selectedLanguageLabel={selectedLanguageLabel}
-      />
+      <Row className="mt-3">
+      <Col>
+        <Dropdown>
+          <Dropdown.Toggle variant="primary" id="language-dropdown">
+            {selectedLanguageLabel}
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            {supportedLanguages.map((lang) => (
+              <Dropdown.Item
+                key={lang.value}
+                onClick={() => setLanguage(lang.value)}
+              >
+                {lang.label}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+      </Col>
+      <Col>
+        <Dropdown className="ml-3">
+          <Dropdown.Toggle variant="primary" id="theme-dropdown">
+            {selectedThemeLabel}
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            {supportedThemes.map((theme) => (
+              <Dropdown.Item
+                key={theme.value}
+                onClick={() => setTheme(theme.value)}
+              >
+                {theme.label}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+      </Col>
+    </Row>
 
       <Row className="mt-3">
         <Col>
