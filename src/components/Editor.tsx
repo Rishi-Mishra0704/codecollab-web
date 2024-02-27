@@ -40,8 +40,8 @@ import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/theme-vibrant_ink";
 import "ace-builds/src-noconflict/theme-xcode";
 
-interface EditorProps{
-  fileContent:string
+interface EditorProps {
+  fileContent: string;
 }
 interface Language {
   value: string;
@@ -76,30 +76,30 @@ interface Theme {
 }
 
 const supportedThemes: Theme[] = [
-  { value: 'monokai', label: 'Monokai' },
-  { value: 'github', label: 'GitHub' },
-  { value: 'dracula', label: 'Dracula' },
-  { value: 'nord_dark', label: 'Nord Dark' },
-  { value: 'one_dark', label: 'One Dark' },
-  { value: 'pastel_on_dark', label: 'Pastel On Dark' },
-  { value: 'solarized_dark', label: 'Solarized Dark' },
-  { value: 'solarized_light', label: 'Solarized Light' },
-  { value: 'sqlserver', label: 'SQL Server' },
-  { value: 'terminal', label: 'Terminal' },
-  { value: 'textmate', label: 'TextMate' },
-  { value: 'tomorrow', label: 'Tomorrow' },
-  { value: 'tomorrow_night', label: 'Tomorrow Night' },
-  { value: 'tomorrow_night_blue', label: 'Tomorrow Night Blue' },
-  { value: 'tomorrow_night_bright', label: 'Tomorrow Night Bright' },
-  { value: 'tomorrow_night_eighties', label: 'Tomorrow Night Eighties' },
-  { value: 'twilight', label: 'Twilight' },
-  { value: 'vibrant_ink', label: 'Vibrant Ink' },
-  { value: 'xcode', label: 'Xcode' },
+  { value: "monokai", label: "Monokai" },
+  { value: "github", label: "GitHub" },
+  { value: "dracula", label: "Dracula" },
+  { value: "nord_dark", label: "Nord Dark" },
+  { value: "one_dark", label: "One Dark" },
+  { value: "pastel_on_dark", label: "Pastel On Dark" },
+  { value: "solarized_dark", label: "Solarized Dark" },
+  { value: "solarized_light", label: "Solarized Light" },
+  { value: "sqlserver", label: "SQL Server" },
+  { value: "terminal", label: "Terminal" },
+  { value: "textmate", label: "TextMate" },
+  { value: "tomorrow", label: "Tomorrow" },
+  { value: "tomorrow_night", label: "Tomorrow Night" },
+  { value: "tomorrow_night_blue", label: "Tomorrow Night Blue" },
+  { value: "tomorrow_night_bright", label: "Tomorrow Night Bright" },
+  { value: "tomorrow_night_eighties", label: "Tomorrow Night Eighties" },
+  { value: "twilight", label: "Twilight" },
+  { value: "vibrant_ink", label: "Vibrant Ink" },
+  { value: "xcode", label: "Xcode" },
 ];
 const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
-  const [language, setLanguage] = useState<string>('javascript');
-  const [theme, setTheme] = useState<string>('monokai');
-  const [code, setCode] = useState<string>('');
+  const [language, setLanguage] = useState<string>("javascript");
+  const [theme, setTheme] = useState<string>("monokai");
+  const [code, setCode] = useState<string>("");
 
   const ws = useRef<WebSocket | null>(null);
 
@@ -108,11 +108,11 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
     setCode(fileContent);
 
     // Connect to WebSocket server
-    ws.current = new WebSocket('ws://localhost:8000/ws');
+    ws.current = new WebSocket("ws://localhost:8000/ws");
 
     // Set up event listeners
     ws.current.onopen = () => {
-      console.log('Connected to WebSocket server');
+      console.log("Connected to WebSocket server");
     };
 
     ws.current.onmessage = (event) => {
@@ -122,7 +122,7 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
     };
 
     ws.current.onclose = () => {
-      console.log('Disconnected from WebSocket server');
+      console.log("Disconnected from WebSocket server");
     };
 
     // Clean up WebSocket connection
@@ -137,6 +137,12 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
     setLanguage(selectedLanguage);
   };
 
+  const selectedLanguageLabel =
+    supportedLanguages.find((lang) => lang.value === language)?.label ||
+    "Select Language";
+  const selectedThemeLabel =
+    supportedThemes.find((t) => t.value === theme)?.label || "Select Theme";
+
   const handleThemeChange = (selectedTheme: string) => {
     setTheme(selectedTheme);
   };
@@ -145,7 +151,7 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
     // Send code changes to WebSocket server
     if (ws.current && ws.current.readyState === WebSocket.OPEN) {
       const message = {
-        username: 'user123', // Set username as needed
+        username: "user123", // Set username as needed
         content: newCode,
       };
       ws.current.send(JSON.stringify(message));
@@ -158,13 +164,13 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
         <Col>
           <Dropdown>
             <Dropdown.Toggle variant="primary" id="language-dropdown">
-              Language
+              {selectedLanguageLabel}
             </Dropdown.Toggle>
             <Dropdown.Menu>
               {supportedLanguages.map((lang) => (
                 <Dropdown.Item
                   key={lang.value}
-                  onClick={() => handleLanguageChange(lang.value)}
+                  onClick={() => setLanguage(lang.value)}
                 >
                   {lang.label}
                 </Dropdown.Item>
@@ -175,13 +181,13 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
         <Col>
           <Dropdown className="ml-3">
             <Dropdown.Toggle variant="primary" id="theme-dropdown">
-              Theme
+              {selectedThemeLabel}
             </Dropdown.Toggle>
             <Dropdown.Menu>
               {supportedThemes.map((theme) => (
                 <Dropdown.Item
                   key={theme.value}
-                  onClick={() => handleThemeChange(theme.value)}
+                  onClick={() => setTheme(theme.value)}
                 >
                   {theme.label}
                 </Dropdown.Item>
