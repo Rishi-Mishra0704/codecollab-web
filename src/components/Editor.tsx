@@ -9,7 +9,6 @@ interface EditorProps {
 }
 
 const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
-  const [language, setLanguage] = useState<string>("javascript");
   const [theme, setTheme] = useState<string>("monokai");
   const [code, setCode] = useState<string>("");
 
@@ -41,6 +40,13 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
       }
     };
   }, []);
+  useEffect(() => {
+    // Send initial file extension to the backend
+    if (ws.current && fileExtension) {
+      const message = { fileExtension };
+      ws.current.send(JSON.stringify(message));
+    }
+  }, [fileExtension]);
 
   const getModeForExtension = (extension: string): string => {
     // Map file extension to corresponding Ace Editor mode
@@ -93,7 +99,6 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
   const selectedThemeLabel =
     supportedThemes.find((t) => t.value === theme)?.label || "Select Theme";
 
-
   return (
     <Container fluid>
       <Row className="mt-3">
@@ -118,15 +123,15 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
 
       <Row className="mt-3">
         <Col>
-          <AceEditor
-            mode={mode}
+        <AceEditor
+            mode={fileExtension}
             theme={theme}
             name="code-editor"
             editorProps={{ $blockScrolling: true }}
             width="100%"
             showGutter={true}
             fontSize={16}
-            value={code !== "" ? code : fileContent}
+            value={code}
             onChange={(newCode) => {
               // Send code changes to WebSocket server
               if (ws.current && ws.current.readyState === WebSocket.OPEN) {
