@@ -39,6 +39,10 @@ import "ace-builds/src-noconflict/theme-tomorrow_night_eighties";
 import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/theme-vibrant_ink";
 import "ace-builds/src-noconflict/theme-xcode";
+
+interface EditorProps{
+  fileContent:string
+}
 interface Language {
   value: string;
   label: string;
@@ -92,14 +96,17 @@ const supportedThemes: Theme[] = [
   { value: 'vibrant_ink', label: 'Vibrant Ink' },
   { value: 'xcode', label: 'Xcode' },
 ];
-const CodeEditor: React.FC = () => {
+const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
   const [language, setLanguage] = useState<string>('javascript');
   const [theme, setTheme] = useState<string>('monokai');
   const [code, setCode] = useState<string>('');
-  // Declare WebSocket instance using useRef hook
+
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
+    // Set the initial code content
+    setCode(fileContent);
+
     // Connect to WebSocket server
     ws.current = new WebSocket('ws://localhost:8000/ws');
 
@@ -126,8 +133,13 @@ const CodeEditor: React.FC = () => {
     };
   }, []);
 
-  const selectedLanguageLabel = supportedLanguages.find(lang => lang.value === language)?.label || 'Select Language';
-  const selectedThemeLabel = supportedThemes.find(t => t.value === theme)?.label || 'Select Theme';
+  const handleLanguageChange = (selectedLanguage: string) => {
+    setLanguage(selectedLanguage);
+  };
+
+  const handleThemeChange = (selectedTheme: string) => {
+    setTheme(selectedTheme);
+  };
 
   const handleCodeChange = (newCode: string) => {
     // Send code changes to WebSocket server
@@ -139,46 +151,43 @@ const CodeEditor: React.FC = () => {
       ws.current.send(JSON.stringify(message));
     }
   };
+
   return (
     <Container fluid>
       <Row className="mt-3">
         <Col>
-          <Row>
-            <Col>
-              <Dropdown>
-                <Dropdown.Toggle variant="primary" id="language-dropdown">
-                  {selectedLanguageLabel}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  {supportedLanguages.map((lang) => (
-                    <Dropdown.Item
-                      key={lang.value}
-                      onClick={() => setLanguage(lang.value)}
-                    >
-                      {lang.label}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </Col>
-            <Col>
-              <Dropdown className="ml-3">
-                <Dropdown.Toggle variant="primary" id="theme-dropdown">
-                  {selectedThemeLabel}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  {supportedThemes.map((theme) => (
-                    <Dropdown.Item
-                      key={theme.value}
-                      onClick={() => setTheme(theme.value)}
-                    >
-                      {theme.label}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </Col>
-          </Row>
+          <Dropdown>
+            <Dropdown.Toggle variant="primary" id="language-dropdown">
+              Language
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {supportedLanguages.map((lang) => (
+                <Dropdown.Item
+                  key={lang.value}
+                  onClick={() => handleLanguageChange(lang.value)}
+                >
+                  {lang.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        </Col>
+        <Col>
+          <Dropdown className="ml-3">
+            <Dropdown.Toggle variant="primary" id="theme-dropdown">
+              Theme
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {supportedThemes.map((theme) => (
+                <Dropdown.Item
+                  key={theme.value}
+                  onClick={() => handleThemeChange(theme.value)}
+                >
+                  {theme.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
         </Col>
       </Row>
 
@@ -188,16 +197,11 @@ const CodeEditor: React.FC = () => {
             mode={language}
             theme={theme}
             name="code-editor"
-            editorProps={{
-              $blockScrolling: true,
-              fontFamily:
-                'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-            }}
+            editorProps={{ $blockScrolling: true }}
             width="100%"
             showGutter={true}
             fontSize={16}
-            value={code}
-            onChange={handleCodeChange}
+            value={fileContent}
           />
         </Col>
       </Row>

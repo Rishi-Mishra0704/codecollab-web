@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const FileFolder = () => {
+interface FileFolderProps{
+  updateFileContent:(content:any)=>void
+}
+
+const FileFolder:React.FC<FileFolderProps> = ({updateFileContent}) => {
   const [path, setPath] = useState('');
   const [isFolder, setIsFolder] = useState(false);
   const [message, setMessage] = useState('');
@@ -40,7 +44,7 @@ const FileFolder = () => {
       const response = await axios.post('http://localhost:8080/api/read', {
         path: `${path}/${fileName}`
       });
-      setFileContent(response.data.content);
+      updateFileContent(response.data.content)
     } catch (error) {
       console.error('Error reading file content:', error);
     }
