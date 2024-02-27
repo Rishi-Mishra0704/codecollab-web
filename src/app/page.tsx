@@ -1,18 +1,19 @@
 "use client"
 import React, { useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import Editor from "@/components/Editor";
+import CodeEditor from "@/components/Editor";
 import FileFolder from "@/components/FileFolder";
-import TerminalController from "@/components/Terminal";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Home() {
   // State to hold the file content
   const [fileContent, setFileContent] = useState('');
+  const [fileExtension, setFileExtension] = useState('');
 
-  // Function to update the file content
-  const updateFileContent = (content:string) => {
+  // Function to update the file content and extension
+  const updateFileContent = (content: string, extension: string) => {
     setFileContent(content);
+    setFileExtension(extension);
   };
 
   return (
@@ -23,12 +24,11 @@ export default function Home() {
           <FileFolder updateFileContent={updateFileContent} />
         </Col>
 
-        {/* Editor component */}
+        {/* CodeEditor component */}
         <Col sm={9} style={{ height: '100%' }}>
-          <Editor fileContent={fileContent} />
+          <CodeEditor fileContent={fileContent} fileExtension={fileExtension} />
         </Col>
       </Row>
-
     </Container>
   );
 }

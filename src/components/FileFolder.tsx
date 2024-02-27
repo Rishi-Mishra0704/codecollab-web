@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-interface FileFolderProps{
-  updateFileContent:(content:any)=>void
+interface FileFolderProps {
+  updateFileContent: (content: string, extension: string) => void;
 }
 
-const FileFolder:React.FC<FileFolderProps> = ({updateFileContent}) => {
+const FileFolder: React.FC<FileFolderProps> = ({ updateFileContent }) => {
   const [path, setPath] = useState('');
   const [isFolder, setIsFolder] = useState(false);
   const [message, setMessage] = useState('');
@@ -23,7 +23,7 @@ const FileFolder:React.FC<FileFolderProps> = ({updateFileContent}) => {
         isFolder: isFolder
       });
       setMessage(response.data.message);
-    } catch (error:any) {
+    } catch (error: any) {
       setMessage(error.response.data.error);
     }
   };
@@ -39,12 +39,14 @@ const FileFolder:React.FC<FileFolderProps> = ({updateFileContent}) => {
     }
   };
 
-  const readFileContent = async (fileName:string) => {
+  const readFileContent = async (fileName: string) => {
     try {
       const response = await axios.post('http://localhost:8080/api/read', {
         path: `${path}/${fileName}`
       });
-      updateFileContent(response.data.content)
+      // Extract file extension from file name
+      const fileExtension = fileName.split('.').pop() || '';
+      updateFileContent(response.data.content, fileExtension);
     } catch (error) {
       console.error('Error reading file content:', error);
     }
@@ -52,17 +54,17 @@ const FileFolder:React.FC<FileFolderProps> = ({updateFileContent}) => {
 
   return (
     <div>
-      <input 
-        type="text" 
-        placeholder="Enter path" 
-        value={path} 
-        onChange={(e) => setPath(e.target.value)} 
+      <input
+        type="text"
+        placeholder="Enter path"
+        value={path}
+        onChange={(e) => setPath(e.target.value)}
       />
       <label>
-        <input 
-          type="checkbox" 
-          checked={isFolder} 
-          onChange={(e) => setIsFolder(e.target.checked)} 
+        <input
+          type="checkbox"
+          checked={isFolder}
+          onChange={(e) => setIsFolder(e.target.checked)}
         />
         Is Folder
       </label>
