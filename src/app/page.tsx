@@ -1,10 +1,15 @@
-"use client"
+"use client";
 import Editor from "@/components/Editor";
+import FileFolder from "@/components/FileFolder";
 import TerminalController from "@/components/Terminal";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Home() {
   return (
-      <><Editor /><TerminalController /></>
+    <>
+      <FileFolder />
+      <Editor />
+      <TerminalController />
+    </>
   );
 }
