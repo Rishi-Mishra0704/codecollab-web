@@ -106,7 +106,7 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent }) => {
   useEffect(() => {
     // Set the initial code content
     fileContent = code
-    setCode(code);
+    setCode(fileContent);
 
     // Connect to WebSocket server
     ws.current = new WebSocket("ws://localhost:8000/ws");
