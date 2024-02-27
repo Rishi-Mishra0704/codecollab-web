@@ -90,22 +90,9 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
   };
 
   const mode = getModeForExtension(fileExtension);
-  const selectedLanguageLabel =
-    supportedLanguages.find((lang) => lang.value === language)?.label ||
-    "Select Language";
   const selectedThemeLabel =
     supportedThemes.find((t) => t.value === theme)?.label || "Select Theme";
 
-  const handleCodeChange = (newCode: string) => {
-    // Send code changes to WebSocket server
-    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-      const message = {
-        username: "user123", // Set username as needed
-        content: newCode,
-      };
-      ws.current.send(JSON.stringify(message));
-    }
-  };
 
   return (
     <Container fluid>
@@ -144,7 +131,6 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
               // Send code changes to WebSocket server
               if (ws.current && ws.current.readyState === WebSocket.OPEN) {
                 const message = {
-                  username: "user123", // Set username as needed
                   content: newCode,
                 };
                 ws.current.send(JSON.stringify(message));
