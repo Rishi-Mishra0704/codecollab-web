@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Col, Container, Dropdown, Row } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Row } from "react-bootstrap";
 import AceEditor from "react-ace";
-import { supportedLanguages, supportedThemes } from "../utils/imports";
-
+import { supportedLanguages, supportedThemes } from "@/utils/imports";
+import { getModeForExtension } from "@/utils/extentions";
 interface EditorProps {
   fileContent: string;
   fileExtension: string;
@@ -11,6 +11,7 @@ interface EditorProps {
 const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
   const [theme, setTheme] = useState<string>("monokai");
   const [code, setCode] = useState<string>("");
+  const [responseData, setResponseData] = useState<any>(null);
 
   const ws = useRef<WebSocket | null>(null);
 
@@ -48,57 +49,34 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
     }
   }, [fileExtension]);
 
-  const getModeForExtension = (extension: string): string => {
-    // Map file extension to corresponding Ace Editor mode
-    switch (extension) {
-      case "js":
-        return "javascript";
-      case "py":
-        return "python";
-      case "java":
-        return "java";
-      case "go":
-        return "golang";
-      case "rb":
-        return "ruby";
-      case "cpp":
-      case "c":
-        return "c_cpp";
-      case "cs":
-        return "csharp";
-      case "php":
-        return "php";
-      case "html":
-        return "html";
-      case "css":
-        return "css";
-      case "ts":
-        return "typescript";
-      case "swift":
-        return "swift";
-      case "md":
-        return "markdown";
-      case "json":
-        return "json";
-      case "xml":
-        return "xml";
-      case "sql":
-        return "sql";
-      case "yaml":
-        return "yaml";
-      case "kt":
-        return "kotlin";
-      case "dart":
-        return "dart";
-      default:
-        return "text"; // Use plain text mode as default
-    }
-  };
-
   const mode = getModeForExtension(fileExtension);
   const selectedThemeLabel =
     supportedThemes.find((t) => t.value === theme)?.label || "Select Theme";
+  useEffect(() => {
+    setCode(fileContent || "");
+  }, [fileContent]);
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          language: fileExtension, // Assuming fileExtension is defined elsewhere in your code
+          code: code, // Assuming code is defined elsewhere in your code
+        }),
+      });
+      console.log(fileExtension);
+      console.log(code);
 
+      const data = await response.json();
+      setResponseData(data);
+      // Here you can do something with the response, such as displaying it
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   return (
     <Container fluid>
       <Row className="mt-3">
@@ -119,21 +97,27 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
             </Dropdown.Menu>
           </Dropdown>
         </Col>
+        <Col>
+          <Button variant="success" onClick={handleSubmit}>
+            RUN
+          </Button>
+        </Col>
       </Row>
 
       <Row className="mt-3">
         <Col>
-        <AceEditor
-            mode={fileExtension}
+          <AceEditor
+            mode={mode}
             theme={theme}
             name="code-editor"
             editorProps={{ $blockScrolling: true }}
             width="100%"
             showGutter={true}
             fontSize={16}
-            value={code}
+            value={code !== "" ? code : fileContent}
             onChange={(newCode) => {
               // Send code changes to WebSocket server
+              setCode(newCode);
               if (ws.current && ws.current.readyState === WebSocket.OPEN) {
                 const message = {
                   content: newCode,
@@ -144,6 +128,9 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
           />
         </Col>
       </Row>
+      <Col>
+        <pre>{JSON.stringify(responseData, null, 2)}</pre>
+      </Col>
     </Container>
   );
 };
