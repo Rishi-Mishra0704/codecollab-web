@@ -15,7 +15,7 @@ function Page({ roomName }: ChatRoomProps): JSX.Element {
   const [ws, setWs] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    const newWs = new WebSocket(`ws://yourdomain.com/ws/chat/${roomName}/`);
+    const newWs = new WebSocket(`wss://chat-system-jfn7nccsv-nikhil-parbats-projects.vercel.app/ws/chat/${roomName}/`);
     
     newWs.onopen = () => {
       console.log('WebSocket connected');
