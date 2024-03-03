@@ -57,7 +57,7 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
   }, [fileContent]);
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:5000/submit", {
+      const response = await fetch("http://localhost:5000/submit/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +71,9 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
       console.log(code);
 
       const data = await response.json();
-      setResponseData(data);
+      setResponseData(data.output.trim());
+      console.log(data);
+
       // Here you can do something with the response, such as displaying it
     } catch (error) {
       console.error("Error:", error);
@@ -128,9 +130,13 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
           />
         </Col>
       </Row>
-      <Col>
-        <pre>{JSON.stringify(responseData, null, 2)}</pre>
-      </Col>
+      {responseData && (
+        <Row className="mt-3">
+          <Col>
+            <pre className="fs-5">{responseData}</pre>
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 };
