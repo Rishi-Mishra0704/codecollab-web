@@ -6,6 +6,7 @@ import { getModeForExtension } from "@/utils/extentions";
 interface EditorProps {
   fileContent: string;
   fileExtension: string;
+  className:string
 }
 
 const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
