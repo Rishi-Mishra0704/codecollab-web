@@ -58,22 +58,22 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
   }, [fileContent]);
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:5000/submit/", {
+      const response = await fetch("http://localhost:5000/execute/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          language: fileExtension, // Assuming fileExtension is defined elsewhere in your code
-          code: code, // Assuming code is defined elsewhere in your code
+          language: fileExtension, 
+          code: code,
         }),
       });
       console.log(fileExtension);
       console.log(code);
 
       const data = await response.json();
-      setResponseData(data.output.trim());
-      console.log(data);
+      setResponseData(data.output);
+      console.log(data.output);
 
       // Here you can do something with the response, such as displaying it
     } catch (error) {

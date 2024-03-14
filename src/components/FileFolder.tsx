@@ -89,8 +89,6 @@ const FileFolder: React.FC<FileFolderProps> = ({ updateFileContent }) => {
           ))}
         </ListGroup>
       )}
-      {fileContent && <pre>{fileContent}</pre>}
-      {message && <p>{message}</p>}
     </div>
   );
 }
