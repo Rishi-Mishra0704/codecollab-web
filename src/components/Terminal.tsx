@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Container } from 'react-bootstrap';
 import Terminal, { ColorMode, TerminalOutput } from 'react-terminal-ui';
 
 interface TerminalControllerProps {
@@ -7,7 +8,7 @@ interface TerminalControllerProps {
 
 const TerminalController: React.FC<TerminalControllerProps> = () => {
   const [terminalLineData, setTerminalLineData] = useState([
-    <TerminalOutput key={0}>Welcome to the React Terminal UI Demo!</TerminalOutput>
+    <TerminalOutput key={0}>Welcome to the CodeCollab!</TerminalOutput>
   ]);
   const ws = useRef<WebSocket | null>(null);
   
@@ -60,9 +61,9 @@ const TerminalController: React.FC<TerminalControllerProps> = () => {
   };
   
   return (
-    <div className="container" style={{overflowX:"hidden"}}>
+    <Container style={{overflowX:"hidden"}}>
       <Terminal
-        name='React Terminal Usage Example'
+        name='CodeCollab Terminal'
         colorMode={ColorMode.Dark}
         onInput={handleInput}
         prompt="$"
@@ -70,7 +71,7 @@ const TerminalController: React.FC<TerminalControllerProps> = () => {
       >
         {terminalLineData}
       </Terminal>
-    </div>
+    </Container>
   );
 };
 
