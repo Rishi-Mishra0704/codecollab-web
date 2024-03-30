@@ -20,7 +20,7 @@ const FileFolder: React.FC<FileFolderProps> = ({ updateFileContent }) => {
 
   const createFileOrFolder = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/create', {
+      const response = await axios.post('http://localhost:8080/create', {
         path: path,
         isFolder: isFolder
       });
@@ -32,7 +32,7 @@ const FileFolder: React.FC<FileFolderProps> = ({ updateFileContent }) => {
 
   const listFiles = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/list', {
+      const response = await axios.post('http://localhost:8080/list', {
         path: path
       });
       setFiles(response.data.files);
@@ -43,7 +43,7 @@ const FileFolder: React.FC<FileFolderProps> = ({ updateFileContent }) => {
 
   const readFileContent = async (fileName: string) => {
     try {
-      const response = await axios.post('http://localhost:8080/api/read', {
+      const response = await axios.post('http://localhost:8080/read', {
         path: `${path}/${fileName}`
       });
       // Extract file extension from file name

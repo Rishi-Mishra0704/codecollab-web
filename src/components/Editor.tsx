@@ -18,7 +18,7 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
 
   useEffect(() => {
     // Connect to WebSocket server
-    ws.current = new WebSocket("ws://localhost:8000/ws");
+    ws.current = new WebSocket("ws://localhost:8000/collab");
 
     // Set up event listeners
     ws.current.onopen = () => {
@@ -58,7 +58,7 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
   }, [fileContent]);
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:5000/execute/", {
+      const response = await fetch("http://localhost:8000/compile/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
