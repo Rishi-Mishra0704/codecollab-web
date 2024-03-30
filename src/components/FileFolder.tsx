@@ -62,6 +62,7 @@ const FileFolder: React.FC<FileFolderProps> = ({ updateFileContent }) => {
         <Form.Control
           type="text"
           placeholder="Enter path"
+          className=''
           value={path}
           onChange={(e) => setPath(e.target.value)}
         />

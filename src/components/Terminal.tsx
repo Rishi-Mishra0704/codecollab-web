@@ -1,25 +1,55 @@
 import React, { useState } from 'react';
+import Terminal, { ColorMode, TerminalOutput } from 'react-terminal-ui';
 
-const TerminalController: React.FC = () => {
-  const [inputCommand, setInputCommand] = useState('');
-  const [output, setOutput] = useState('');
 
-  const executeCommand = () => {
-    // Placeholder implementation: echo the input command as output
-    setOutput(inputCommand);
+interface TerminalControllerProps{
+  className?: string;
+}
+
+const TerminalController:React.FC<TerminalControllerProps> = () => {
+  const [terminalLineData, setTerminalLineData] = useState([
+    <TerminalOutput key={0}>Welcome to the React Terminal UI Demo!</TerminalOutput>
+  ]);
+
+  const handleInput = (terminalInput:string) => {
+    console.log(`New terminal input received: '${terminalInput}'`);
+    // Here you can process the terminal input
+    // For demo purposes, let's just add it to the terminal output
+    setTerminalLineData(prevState => [
+      ...prevState,
+      <TerminalOutput key={prevState.length}>{terminalInput}</TerminalOutput>
+    ]);
+  };
+
+  const handleRedButtonClick = () => {
+    // Handle red button click if needed
+    console.log("Red button clicked");
+  };
+
+  const handleYellowButtonClick = () => {
+    // Handle yellow button click if needed
+    console.log("Yellow button clicked");
+  };
+
+  const handleGreenButtonClick = () => {
+    // Handle green button click if needed
+    console.log("Green button clicked");
   };
 
   return (
     <div className="container">
-      <input
-        type="text"
-        value={inputCommand}
-        onChange={(e) => setInputCommand(e.target.value)}
-      />
-      <button onClick={executeCommand}>Execute</button>
-      <div>
-        <pre>{output}</pre>
-      </div>
+      <Terminal
+        name='React Terminal Usage Example'
+        colorMode={ColorMode.Dark}
+        onInput={handleInput}
+        prompt="$"
+        redBtnCallback={handleRedButtonClick}
+        yellowBtnCallback={handleYellowButtonClick}
+        greenBtnCallback={handleGreenButtonClick}
+        height='100px'
+      >
+        {terminalLineData}
+      </Terminal>
     </div>
   );
 };

@@ -1,10 +1,11 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import CodeEditor from "@/components/Editor";
 import FileFolder from "@/components/FileFolder";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Video from "@/components/video";
+import TerminalController from "@/components/Terminal";
 
 export default function Page() {
   // State to hold the file content
@@ -20,7 +21,8 @@ export default function Page() {
   return (
     <Container
       fluid
-      style={{ height: "100vh", display: "flex", flexDirection: "column" }}
+      className="bg-dark text-light"
+      style={{ height: "100vh", display: "flex", flexDirection: "column"}}
     >
       <Row style={{ flex: 1 }}>
         {/* FileFolder component */}
@@ -35,8 +37,9 @@ export default function Page() {
               <CodeEditor
                 fileContent={fileContent}
                 fileExtension={fileExtension}
-                className="w-100" 
+                className="w-100 m-2"
               />
+              <TerminalController className="m-2" />
             </Col>
             <Col sm={3}>
               <Video />
