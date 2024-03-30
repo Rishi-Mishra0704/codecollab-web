@@ -114,8 +114,8 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
             theme={theme}
             name="code-editor"
             editorProps={{ $blockScrolling: true }}
-            width="100%"
-            height="400px"
+            width="800px"
+            height="500px"
             className="m-2"
             showGutter={true}
             fontSize={16}

@@ -22,7 +22,7 @@ export default function Page() {
     <Container
       fluid
       className="bg-dark text-light"
-      style={{ height: "100vh", display: "flex", flexDirection: "column"}}
+      style={{display: "flex", flexDirection: "column"}}
     >
       <Row style={{ flex: 1 }}>
         {/* FileFolder component */}
