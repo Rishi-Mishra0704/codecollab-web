@@ -58,7 +58,7 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
   }, [fileContent]);
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:8000/compile/", {
+      const response = await fetch("http://localhost:8000/compile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
