@@ -32,9 +32,9 @@ const Video = () => {
         let peer: Peer;
         if (typeof window !== 'undefined') {
           peer = new Peer(myUniqueId, {
-            host: 'localhost',
-            port: 9000,
+            host: 'cc-video-chat-system.onrender.com',
             path: '/myapp',
+            secure: true,
           });
 
           setPeerInstance(peer);
