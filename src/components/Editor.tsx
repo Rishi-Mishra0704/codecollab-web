@@ -118,6 +118,13 @@ const CodeEditor: React.FC<EditorProps> = ({ fileContent, fileExtension }) => {
             height="500px"
             className="m-2"
             showGutter={true}
+            setOptions={{
+  enableBasicAutocompletion: true,
+  enableLiveAutocompletion: true,
+  enableSnippets: false,
+  showLineNumbers: true,
+  tabSize: 2,
+  }} 
             fontSize={16}
             value={code !== "" ? code : fileContent}
             onChange={(newCode) => {
